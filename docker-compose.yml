@@ -1,0 +1,54 @@
+version: "3.0"
+
+networks:
+  webdev-network:
+    driver: bridge
+
+services:
+  client:
+    build: ./client
+    container_name: react-client
+    ports:
+      - 3000:3000
+    depends_on:
+      - backend
+    networks:
+      - webdev-network
+
+  backend:
+    build: ./server
+    container_name: express-backend
+    ports:
+      - 3006:3006
+    environment: 
+      PGUSER: webdev
+      PGHOST: db
+      PGPASSWORD: webdevPassword
+      PGDATABASE: webdev
+      PGPORT: 5432
+    depends_on:
+      - db
+    networks:
+      - webdev-network
+
+  db:
+    image: postgres
+    container_name: postgres-database
+    restart: always
+    ports: 
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: webdev
+      POSTGRES_PASSWORD: webdevPassword
+      POSTGRES_DB: webdev
+    volumes:
+      - ./1_init.sql:/docker-entrypoint-initdb.d/docker_postgres_init.sql
+    networks:
+      - webdev-network
+
+  adminer:
+    image: adminer
+    container_name: adminer-db-ui-tool
+    restart: always
+    ports:
+      - 9090:8080
