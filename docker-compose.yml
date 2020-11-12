@@ -52,3 +52,5 @@ services:
     restart: always
     ports:
       - 9090:8080
+    networks:
+      - webdev-network  

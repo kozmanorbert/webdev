@@ -1,9 +1,3 @@
-CREATE TABLE IF NOT EXISTS products (
-    id INT,
-    name VARCHAR(50),
-    price INT,
-    on_sale boolean
-);
 CREATE TABLE IF NOT EXISTS restaurants (
     id BIGSERIAL NOT NULL PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
@@ -12,7 +6,7 @@ CREATE TABLE IF NOT EXISTS restaurants (
 );
 CREATE TABLE IF NOT EXISTS reviews (
     id BIGSERIAL not null PRIMARY KEY,
-    restaurant_id BIGINT not null references restaurants(id),
+    restaurant_id BIGINT not null REFERENCES restaurants(id) ON DELETE CASCADE,
     name VARCHAR(50) not null,
     review TEXT not null,
     rating INT not null check(rating >=1 and rating <=5)
